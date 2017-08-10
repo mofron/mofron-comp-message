@@ -66,7 +66,7 @@ mofron.comp.Message = class extends mofron.comp.Frame {
                 return text;
             }
             /* setter */
-            if ('string' !== typeof text) {
+            if ('string' !== typeof txt) {
                 throw new Error('invalid parameter');
             }
             text.text(txt);
