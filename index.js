@@ -2,6 +2,7 @@
  * @file   mofron-comp-message/index.js
  * @author simpart
  */
+require('mofron-comp-frame');
 require('mofron-comp-text');
 
 /**
