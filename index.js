@@ -2,14 +2,14 @@
  * @file   mofron-comp-message/index.js
  * @author simpart
  */
-require('mofron-comp-frame');
-require('mofron-comp-text');
+let Frame = require('mofron-comp-frame');
+let Text  = require('mofron-comp-text');
 
 /**
  * @class Message
  * @brief text component for mofron
  */
-mofron.comp.Message = class extends mofron.comp.Frame {
+mofron.comp.Message = class extends Frame {
     
     constructor (prm_opt) {
         try {
@@ -31,16 +31,14 @@ mofron.comp.Message = class extends mofron.comp.Frame {
         try {
             super.initDomConts();
             let thm  = this.theme();
-            let text = thm.component('mofron-comp-text');
             this.addChild(
-                new text((null === prm) ? '' : prm)
+                new Text((null === prm) ? '' : prm)
             );
             /* frame setting */
             this.size(null,null);
             this.text().style({
                 margin : '10px'
             });
-            this.radius(15);
         } catch (e) {
             console.error(e.stack);
             throw e;
