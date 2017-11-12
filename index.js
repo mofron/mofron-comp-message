@@ -2,20 +2,20 @@
  * @file   mofron-comp-message/index.js
  * @author simpart
  */
+let mf    = require('mofron');
 let Frame = require('mofron-comp-frame');
 let Text  = require('mofron-comp-text');
-
 /**
  * @class Message
  * @brief text component for mofron
  */
-mofron.comp.Message = class extends Frame {
+mf.comp.Message = class extends mf.Component {
     
-    constructor (prm_opt) {
+    constructor (po) {
         try {
             super();
             this.name('Message');
-            this.prmOpt(prm_opt);
+            this.prmOpt(po);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -30,27 +30,45 @@ mofron.comp.Message = class extends Frame {
     initDomConts (prm) {
         try {
             super.initDomConts();
-            let thm  = this.theme();
-            this.addChild(
-                new Text((null === prm) ? '' : prm)
-            );
+            this.addChild(this.frame());
+            this.target(this.frame().target());
+            
+            this.text((null === prm) ? '' : prm);
+            this.addChild(this.text());
             /* frame setting */
-            this.size(null,null);
-            this.text().style({
-                margin : '10px'
-            });
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    addChild (chd, disp) {
+    addChild (chd, idx) {
         try {
             chd.style({
                 margin : '10px'
             });
-            super.addChild(chd, disp);
+            super.addChild(chd, idx);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    frame (frm) {
+        try {
+            if (undefined === frm) {
+                /* getter */
+                if (undefined === this.m_msg_frm) {
+                    this.frame(new Frame({}));
+                }
+                return this.m_msg_frm;
+            }
+            /* setter */
+            if (true !== mf.func.isInclude(frm, 'Frame')) {
+                throw new Error('invalid parameter');
+            }
+            frm.size(null,null);
+            this.m_msg_frm = frm;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -59,16 +77,28 @@ mofron.comp.Message = class extends Frame {
     
     text (txt) {
         try {
-             let text = this.child()[0];
             if (undefined === txt) {
                 /* getter */
-                return text;
+                if (undefined === this.m_msg_txt) {
+                    this.text(txt);
+                }
+                return this.m_msg_txt;
             }
             /* setter */
-            if ('string' !== typeof txt) {
+            if ('string' === typeof txt) {
+                txt = new Text(txt);
+            }
+            if (true === mf.func.isInclude(txt, 'Text')) {
+                if (true === this.target().isPushed()) {
+                    this.updChild(this.m_msg_txt, txt);
+                }
+                txt.style({
+                    margin : '10px'
+                });
+                this.m_msg_txt = txt;
+            } else {
                 throw new Error('invalid parameter');
             }
-            text.text(txt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -106,7 +136,19 @@ mofron.comp.Message = class extends Frame {
                 (val[2] > 85) ? 255 : val[2] + 170,
                 val[3]
             );
-            super.color(clr);
+            this.frame().color(clr);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    height (val) {
+        try {
+            if (40 < val ) {
+                this.text().size(val-20);
+            }
+            return super.height(val);
         } catch (e) {
             console.error(e.stack);
             throw e;
