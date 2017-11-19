@@ -35,6 +35,7 @@ mf.comp.Message = class extends mf.Component {
             
             this.text((null === prm) ? '' : prm);
             this.addChild(this.text());
+
             /* frame setting */
         } catch (e) {
             console.error(e.stack);
@@ -44,9 +45,9 @@ mf.comp.Message = class extends mf.Component {
     
     addChild (chd, idx) {
         try {
-            chd.style({
-                margin : '10px'
-            });
+            //chd.style({
+            //    margin : '10px'
+            //});
             super.addChild(chd, idx);
         } catch (e) {
             console.error(e.stack);
@@ -68,6 +69,10 @@ mf.comp.Message = class extends mf.Component {
                 throw new Error('invalid parameter');
             }
             frm.size(null,null);
+            frm.style({
+                'display'    : 'flex',
+                'align-items': 'center'
+            });
             this.m_msg_frm = frm;
         } catch (e) {
             console.error(e.stack);
@@ -85,19 +90,28 @@ mf.comp.Message = class extends mf.Component {
                 return this.m_msg_txt;
             }
             /* setter */
-            if ('string' === typeof txt) {
-                txt = new Text(txt);
-            }
-            if (true === mf.func.isInclude(txt, 'Text')) {
-                if (true === this.target().isPushed()) {
+            if (undefined !== this.m_msg_txt) {
+                /* update message text */
+                if ('string' === typeof txt) {
+                    this.m_msg_txt.text(txt);
+                } else if (true === mf.func.isInclude(txt, 'Text')) {
                     this.updChild(this.m_msg_txt, txt);
+                } else {
+                    throw new Error('invalid parameter');
                 }
-                txt.style({
-                    margin : '10px'
-                });
-                this.m_msg_txt = txt;
             } else {
-                throw new Error('invalid parameter');
+                let set_txt = txt;
+                if ('string' === typeof set_txt) {
+                    set_txt = new Text(txt);
+                    set_txt.style({
+                        'margin-left' : '10px'
+                    });
+                }
+                if (true === mf.func.isInclude(set_txt, 'Text')) {
+                    this.m_msg_txt = set_txt;
+                } else {
+                    throw new Error('invalid parameter');
+                }
             }
         } catch (e) {
             console.error(e.stack);
@@ -116,12 +130,12 @@ mf.comp.Message = class extends mf.Component {
         try {
             if (undefined === clr) {
                 /* getter */
-                return mofron.func.getColor(
+                return mf.func.getColor(
                            this.style('border-color')
                        );
             }
             /* setter */
-            if (false === mofron.func.isObject(clr, 'Color')) {
+            if (false === mf.func.isObject(clr, 'Color')) {
                 throw new Error('invalid parameter');
             }
             /* set border color */
@@ -148,7 +162,7 @@ mf.comp.Message = class extends mf.Component {
             if (40 < val ) {
                 this.text().size(val-20);
             }
-            return super.height(val);
+            return this.frame().height(val);
         } catch (e) {
             console.error(e.stack);
             throw e;
