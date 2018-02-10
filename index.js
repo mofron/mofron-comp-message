@@ -60,7 +60,7 @@ mf.comp.Message = class extends mf.Component {
             if (undefined === frm) {
                 /* getter */
                 if (undefined === this.m_msg_frm) {
-                    this.frame(new Frame({}));
+                    this.frame(new Frame());
                 }
                 return this.m_msg_frm;
             }
@@ -85,7 +85,7 @@ mf.comp.Message = class extends mf.Component {
             if (undefined === txt) {
                 /* getter */
                 if (undefined === this.m_msg_txt) {
-                    this.text(txt);
+                    this.text('');
                 }
                 return this.m_msg_txt;
             }
