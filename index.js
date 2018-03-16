@@ -5,6 +5,8 @@
 let mf    = require('mofron');
 let Frame = require('mofron-comp-frame');
 let Text  = require('mofron-comp-text');
+let efCenter = require('mofron-effect-center');
+
 /**
  * @class Message
  * @brief text component for mofron
@@ -35,20 +37,9 @@ mf.comp.Message = class extends mf.Component {
             
             this.text((null === prm) ? '' : prm);
             this.addChild(this.text());
-
-            /* frame setting */
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    addChild (chd, idx) {
-        try {
-            //chd.style({
-            //    margin : '10px'
-            //});
-            super.addChild(chd, idx);
+            
+            this.addEffect(new efCenter(true, false));
+            this.size(350, 60);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -68,7 +59,6 @@ mf.comp.Message = class extends mf.Component {
             if (true !== mf.func.isInclude(frm, 'Frame')) {
                 throw new Error('invalid parameter');
             }
-            frm.size(null,null);
             frm.style({
                 'display'    : 'flex',
                 'align-items': 'center'
