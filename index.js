@@ -37,7 +37,7 @@ mf.comp.Message = class extends mf.Component {
             this.text((null === prm) ? '' : prm);
             this.addChild(this.text());
             
-            this.size(350, 60);
+            this.size(350, 40);
         } catch (e) {
             console.error(e.stack);
             throw e;
