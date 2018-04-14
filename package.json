@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-message",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "message component for mofron",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,6 @@
     "front-end"
   ],
   "dependencies": {
-    "mofron-effect-center": ""
   },
   "author": "simparts",
   "license": "SEE LICENSE IN LICENSE",

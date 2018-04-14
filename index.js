@@ -5,7 +5,6 @@
 let mf    = require('mofron');
 let Frame = require('mofron-comp-frame');
 let Text  = require('mofron-comp-text');
-let efCenter = require('mofron-effect-center');
 
 /**
  * @class Message
@@ -38,7 +37,6 @@ mf.comp.Message = class extends mf.Component {
             this.text((null === prm) ? '' : prm);
             this.addChild(this.text());
             
-            this.addEffect(new efCenter(true, false));
             this.size(350, 60);
         } catch (e) {
             console.error(e.stack);
