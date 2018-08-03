@@ -2,9 +2,9 @@
  * @file   mofron-comp-message/index.js
  * @author simpart
  */
-let mf    = require('mofron');
-let Frame = require('mofron-comp-frame');
-let Text  = require('mofron-comp-text');
+const mf    = require('mofron');
+const Frame = require('mofron-comp-frame');
+const Text  = require('mofron-comp-text');
 
 /**
  * @class Message
@@ -16,6 +16,7 @@ mf.comp.Message = class extends mf.Component {
         try {
             super();
             this.name('Message');
+            this.prmMap('text');
             this.prmOpt(po);
         } catch (e) {
             console.error(e.stack);
@@ -24,17 +25,15 @@ mf.comp.Message = class extends mf.Component {
     }
     
     /**
-     * initialize vdom
+     * initialize dom contents
      * 
-     * @param prm : (string) text contents
      */
-    initDomConts (prm) {
+    initDomConts () {
         try {
             super.initDomConts();
             this.addChild(this.frame());
             this.target(this.frame().target());
             
-            this.text((null === prm) ? '' : prm);
             this.addChild(this.text());
             
             this.size(350, 40);
@@ -114,7 +113,7 @@ mf.comp.Message = class extends mf.Component {
      * @return (string) color
      * @note do not specify parameters, if use as getter
      */
-    color (clr) {
+    mainColor (clr) {
         try {
             if (undefined === clr) {
                 /* getter */
@@ -138,12 +137,14 @@ mf.comp.Message = class extends mf.Component {
                 (val[2] > 85) ? 255 : val[2] + 170,
                 val[3]
             );
-            this.frame().color(clr);
+            this.frame().mainColor(clr);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
+    
+    baseColor () {}
     
     height (val) {
         try {
