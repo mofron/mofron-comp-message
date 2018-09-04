@@ -2,12 +2,12 @@
  * @file   mofron-comp-message/index.js
  * @author simpart
  */
-const mf     = require('mofron');
-const Frame  = require('mofron-comp-frame');
-const Text   = require('mofron-comp-text');
-const VrtPos = require('mofron-effect-vrtpos');
-
-const SyncHei = require('mofron-effect-dev');
+const mf      = require('mofron');
+const Frame   = require('mofron-comp-frame');
+const Text    = require('mofron-comp-text');
+const VrtPos  = require('mofron-effect-vrtpos');
+const HrzPos  = require('mofron-effect-hrzpos');
+const SyncHei = require('mofron-effect-synchei');
 
 /**
  * @class Message
@@ -58,8 +58,6 @@ mf.comp.Message = class extends mf.Component {
                 throw new Error('invalid parameter');
             }
             frm.style({ 'display' : 'flex' });
-            //    //'align-items': 'center'
-            //});
             this.m_msgfrm = frm;
         } catch (e) {
             console.error(e.stack);
@@ -75,6 +73,7 @@ mf.comp.Message = class extends mf.Component {
                     this.m_msgtxt = new Text({
                         sizeValue : new mf.Param('margin-left', '0.2rem'),
                         effect    : [
+                            new HrzPos('center'),
                             new VrtPos('center'),
                             new SyncHei(this, '-0.3rem')
                         ]
