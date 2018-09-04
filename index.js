@@ -2,9 +2,12 @@
  * @file   mofron-comp-message/index.js
  * @author simpart
  */
-const mf    = require('mofron');
-const Frame = require('mofron-comp-frame');
-const Text  = require('mofron-comp-text');
+const mf     = require('mofron');
+const Frame  = require('mofron-comp-frame');
+const Text   = require('mofron-comp-text');
+const VrtPos = require('mofron-effect-vrtpos');
+
+const SyncHei = require('mofron-effect-dev');
 
 /**
  * @class Message
@@ -33,10 +36,8 @@ mf.comp.Message = class extends mf.Component {
             super.initDomConts();
             this.addChild(this.frame());
             this.target(this.frame().target());
-            
             this.addChild(this.text());
-            
-            this.size(350, 40);
+            this.size('3.5rem', '0.5rem');
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -47,58 +48,47 @@ mf.comp.Message = class extends mf.Component {
         try {
             if (undefined === frm) {
                 /* getter */
-                if (undefined === this.m_msg_frm) {
-                    this.frame(new Frame());
+                if (undefined === this.m_msgfrm) {
+                    this.frame(new Frame({}));
                 }
-                return this.m_msg_frm;
+                return this.m_msgfrm;
             }
             /* setter */
             if (true !== mf.func.isInclude(frm, 'Frame')) {
                 throw new Error('invalid parameter');
             }
-            frm.style({
-                'display'    : 'flex',
-                'align-items': 'center'
-            });
-            this.m_msg_frm = frm;
+            frm.style({ 'display' : 'flex' });
+            //    //'align-items': 'center'
+            //});
+            this.m_msgfrm = frm;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    text (txt) {
+    text (prm) {
         try {
-            if (undefined === txt) {
+            if (undefined === prm) {
                 /* getter */
-                if (undefined === this.m_msg_txt) {
-                    this.text('');
-                }
-                return this.m_msg_txt;
-            }
-            /* setter */
-            if (undefined !== this.m_msg_txt) {
-                /* update message text */
-                if ('string' === typeof txt) {
-                    this.m_msg_txt.text(txt);
-                } else if (true === mf.func.isInclude(txt, 'Text')) {
-                    this.updChild(this.m_msg_txt, txt);
-                } else {
-                    throw new Error('invalid parameter');
-                }
-            } else {
-                let set_txt = txt;
-                if ('string' === typeof set_txt) {
-                    set_txt = new Text(txt);
-                    set_txt.style({
-                        'margin-left' : '10px'
+                if (undefined === this.m_msgtxt) {
+                    this.m_msgtxt = new Text({
+                        sizeValue : new mf.Param('margin-left', '0.2rem'),
+                        effect    : [
+                            new VrtPos('center'),
+                            new SyncHei(this, '-0.3rem')
+                        ]
                     });
                 }
-                if (true === mf.func.isInclude(set_txt, 'Text')) {
-                    this.m_msg_txt = set_txt;
-                } else {
-                    throw new Error('invalid parameter');
-                }
+                return this.m_msgtxt;
+            }
+            /* setter */
+            if ('string' === typeof prm) {
+                this.m_msgtxt.text(prm);
+            } else if (true === mf.func.isInclude(prm, 'Text')) {
+                this.updChild(this.m_msgtxt, prm);
+            } else {
+                throw new Error('invalid parameter');
             }
         } catch (e) {
             console.error(e.stack);
@@ -117,24 +107,21 @@ mf.comp.Message = class extends mf.Component {
         try {
             if (undefined === clr) {
                 /* getter */
-                return mf.func.getColor(
-                           this.style('border-color')
-                       );
+                return mf.func.getColor(this.style('border-color'));
             }
             /* setter */
             if (false === mf.func.isObject(clr, 'Color')) {
                 throw new Error('invalid parameter');
             }
             /* set border color */
-            this.style({
-                'border-color' : clr.getStyle() 
-            });
+            this.style({ 'border-color' : clr.getStyle() });
+            
             /* set frame color */
             let val = clr.rgba();
             clr.rgba(
-                (val[0] > 85) ? 255 : val[0] + 170,
-                (val[1] > 85) ? 255 : val[1] + 170,
-                (val[2] > 85) ? 255 : val[2] + 170,
+                (val[0] > 105) ? 255 : val[0] + 150,
+                (val[1] > 105) ? 255 : val[1] + 150,
+                (val[2] > 105) ? 255 : val[2] + 150,
                 val[3]
             );
             this.frame().mainColor(clr);
@@ -144,19 +131,13 @@ mf.comp.Message = class extends mf.Component {
         }
     }
     
-    baseColor () {}
-    
-    height (val) {
-        try {
-            if (40 < val ) {
-                this.text().size(val-20);
-            }
-            return this.frame().height(val);
-        } catch (e) {
+    baseColor (clr) {
+        try { return this.frame().mainColor(clr); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
+    
 }
-mofron.comp.message = {};
-module.exports = mofron.comp.Message;
+module.exports = mf.comp.Message;
+/* end of file */
