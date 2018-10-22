@@ -1,20 +1,22 @@
 /**
  * @file   mofron-comp-message/index.js
+ * @brief  message component for mofron
  * @author simpart
  */
 const mf      = require('mofron');
 const Frame   = require('mofron-comp-frame');
 const Text    = require('mofron-comp-text');
+const Horiz   = require('mofron-layout-horizon');
 const VrtPos  = require('mofron-effect-vrtpos');
-const HrzPos  = require('mofron-effect-hrzpos');
 const SyncHei = require('mofron-effect-synchei');
 
-/**
- * @class Message
- * @brief text component for mofron
- */
 mf.comp.Message = class extends mf.Component {
-    
+    /**
+     * initialize message component
+     *
+     * @param p1 (object) component option
+     * @param p1 (string) message
+     */
     constructor (po) {
         try {
             super();
@@ -30,6 +32,7 @@ mf.comp.Message = class extends mf.Component {
     /**
      * initialize dom contents
      * 
+     * @note private method
      */
     initDomConts () {
         try {
@@ -44,51 +47,19 @@ mf.comp.Message = class extends mf.Component {
         }
     }
     
-    frame (frm) {
+    /**
+     * frame component setter/getter
+     *
+     * @param (Frame) frame component
+     * @return (Frame) frame component
+     */
+    frame (prm) {
         try {
-            if (undefined === frm) {
-                /* getter */
-                if (undefined === this.m_msgfrm) {
-                    this.frame(new Frame({}));
-                }
-                return this.m_msgfrm;
+            let ret = this.innerComp('frame', prm, Frame);
+            if (undefined !== prm) {
+                prm.execOption({ layout : new Horiz() });
             }
-            /* setter */
-            if (true !== mf.func.isInclude(frm, 'Frame')) {
-                throw new Error('invalid parameter');
-            }
-            frm.style({ 'display' : 'flex' });
-            this.m_msgfrm = frm;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    text (prm) {
-        try {
-            if (undefined === prm) {
-                /* getter */
-                if (undefined === this.m_msgtxt) {
-                    this.m_msgtxt = new Text({
-                        sizeValue : new mf.Param('margin-left', '0.2rem'),
-                        effect    : [
-                            new HrzPos('center'),
-                            new VrtPos('center'),
-                            new SyncHei(this, '-0.3rem')
-                        ]
-                    });
-                }
-                return this.m_msgtxt;
-            }
-            /* setter */
-            if ('string' === typeof prm) {
-                this.m_msgtxt.text(prm);
-            } else if (true === mf.func.isInclude(prm, 'Text')) {
-                this.updChild(this.m_msgtxt, prm);
-            } else {
-                throw new Error('invalid parameter');
-            }
+            return ret;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -96,40 +67,59 @@ mf.comp.Message = class extends mf.Component {
     }
     
     /**
-     * text color setter / getter
-     * 
-     * @param clr : (mofron.Color) color object
-     * @return (string) color
-     * @note do not specify parameters, if use as getter
+     * message text setter/getter
+     *
+     * @param (string) message text
+     * @param (Text) message text component
+     * @return (Text) message text component
      */
-    mainColor (clr) {
+    text (prm) {
         try {
-            if (undefined === clr) {
-                /* getter */
-                return mf.func.getColor(this.style('border-color'));
+            if ('string' === typeof prm) {
+                this.text().execOption({
+                    text : prm
+                });
+                return;
             }
-            /* setter */
-            if (false === mf.func.isObject(clr, 'Color')) {
-                throw new Error('invalid parameter');
-            }
-            /* set border color */
-            this.style({ 'border-color' : clr.getStyle() });
             
-            /* set frame color */
-            let val = clr.rgba();
-            clr.rgba(
-                (val[0] > 105) ? 255 : val[0] + 150,
-                (val[1] > 105) ? 255 : val[1] + 150,
-                (val[2] > 105) ? 255 : val[2] + 150,
-                val[3]
-            );
-            this.frame().mainColor(clr);
+            let ret = this.innerComp('text', prm, Text);
+            if (undefined !== prm) {
+                prm.execOption({
+                    sizeValue : [ 'margin-left', '0.2rem' ],
+                    effect    : [
+                        new VrtPos('center'),
+                        new SyncHei(this, '-0.3rem')
+                    ]
+                });
+            }
+            return ret;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
+    /**
+     * text color setter/getter
+     * 
+     * @param (string) text color (css value)
+     * @param (Array) text color ([red(0-255), green(0-255), blue(0-255)])
+     * @return (string) text color
+     */
+    mainColor (prm) {
+        try { return this.text().color(prm); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    /**
+     * frame background color setter/getter
+     *
+     * @param (string) frame background color (css value)
+     * @param (Array) frame background color ([red(0-255), green(0-255), blue(0-255)])
+     * @return (string) frame background color
+     */
     baseColor (clr) {
         try { return this.frame().mainColor(clr); } catch (e) {
             console.error(e.stack);
@@ -137,6 +127,19 @@ mf.comp.Message = class extends mf.Component {
         }
     }
     
+    /**
+     * frame border color setter/getter
+     *
+     * @param (string) frame border color (css value)
+     * @param (Array) frame border color ([red(0-255), green(0-255), blue(0-255)])
+     * @return (string) frame border color
+     */
+    accentColor (prm) {
+        try { return this.frame().border().color(prm); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 module.exports = mf.comp.Message;
 /* end of file */

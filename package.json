@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-message",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "message component for mofron",
   "main": "index.js",
   "scripts": {
@@ -14,12 +14,12 @@
     "front-end"
   ],
   "dependencies": {
-    "mofron-effect-hrzpos"  : "",
-    "mofron-effect-hrzpos"  : "",
+    "mofron-layout-horizon" : "",
+    "mofron-effect-vrtpos"  : "",
     "mofron-effect-synchei" : ""
   },
   "author": "simparts",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mofron/mofron-comp-message/issues"
   },
