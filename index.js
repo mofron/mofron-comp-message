@@ -57,7 +57,7 @@ mf.comp.Message = class extends mf.Component {
         try {
             let ret = this.innerComp('frame', prm, Frame);
             if (undefined !== prm) {
-                prm.execOption({ layout : new Horiz() });
+                prm.option({ layout : new Horiz() });
             }
             return ret;
         } catch (e) {
@@ -76,19 +76,19 @@ mf.comp.Message = class extends mf.Component {
     text (prm) {
         try {
             if ('string' === typeof prm) {
-                this.text().execOption({
-                    text : prm
-                });
+                this.text().option({ text : prm });
                 return;
             }
             
             let ret = this.innerComp('text', prm, Text);
             if (undefined !== prm) {
-                prm.execOption({
+                prm.option({
                     sizeValue : [ 'margin-left', '0.2rem' ],
                     effect    : [
                         new VrtPos('center'),
-                        new SyncHei(this, '-0.3rem')
+                        new SyncHei({
+                            targetComp: this, offset: '-0.3rem', tag: this.name() + '-text'
+                        })
                     ]
                 });
             }
@@ -135,7 +135,7 @@ mf.comp.Message = class extends mf.Component {
      * @return (string) frame border color
      */
     accentColor (prm) {
-        try { return this.frame().border().color(prm); } catch (e) {
+        try { return this.frame().accentColor(prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
