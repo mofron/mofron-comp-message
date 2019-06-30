@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-message",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "message component for mofron",
   "main": "index.js",
   "scripts": {
@@ -14,9 +14,11 @@
     "front-end"
   ],
   "dependencies": {
-    "mofron-layout-horizon" : "",
-    "mofron-effect-vrtpos"  : "",
-    "mofron-effect-synchei" : ""
+    "mofron-comp-txtframe" : "",
+    "mofron-comp-text" : "",
+    "mofron-comp-close" : "",
+    "mofron-effect-vrtpos" : "",
+    "mofron-effect-hrzpos" : ""
   },
   "author": "simparts",
   "license": "MIT",
