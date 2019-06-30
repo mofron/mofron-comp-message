@@ -1,0 +1,11 @@
+<require>
+    <tag module="mofron-comp-message">Message</tag>
+</require>
+
+<script>
+msg.visible(true);
+</script>
+
+<Message name=msg fixpos="right","bottom" timer=3>
+    message
+</Message>
