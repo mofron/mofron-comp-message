@@ -55,7 +55,10 @@ mf.comp.Message = class extends Frame {
             
             /* style */
             this.x_center(false);
-            this.style({ "display":"flex" });
+            this.style({
+	        "display"  : "flex",
+		"position" : "relative"
+            });
             this.size("3.5rem", "0.5rem");
             this.visible(false);
         } catch (e) {
@@ -65,10 +68,33 @@ mf.comp.Message = class extends Frame {
     }
     
     /**
+     * set text position
+     * 
+     * @type private
+     */
+    beforeRender () {
+        try {
+            super.beforeRender();
+	    let txt = this.text();
+	    if (0 !== txt.length) {
+                for (let idx in txt) {
+                    txt[idx].style(
+		        { "margin-left" : "0.3rem" },
+                        { loose: true }
+		    );
+		}
+	    }
+	} catch (e) {
+ 	    console.error(e.stack);
+            throw e;
+	}
+    }
+    
+    /**
      * fixed position config
      * 
-     * @param (string ["left"/"center"/"right"]) horizonal position
-     * @param (string ["top"/"center"/"bottom"]) vertical position
+     * @param (string) horizonal position ["left"/"center"/"right"]
+     * @param (string) vertical position ["top"/"center"/"bottom"]
      * @type parameter
      */
     fixpos (xpos, ypos) {
@@ -87,7 +113,7 @@ mf.comp.Message = class extends Frame {
     /**
      * horizonal fixed position
      * 
-     * @param (string ["left"/"center"/"right"]) horizonal fixed position
+     * @param (string) horizonal fixed position ["left"/"center"/"right"]
      * @return (string) horizonal fixed position
      * @type parameter
      */
@@ -110,7 +136,7 @@ mf.comp.Message = class extends Frame {
     /**
      * vertical fixed position
      * 
-     * @param (string ["top"/"center"/"bottom"]) vertical fixed position
+     * @param (string) vertical fixed position ["top"/"center"/"bottom"]
      * @return (string) vertical fixed position
      * @type parameter
      */
@@ -176,6 +202,12 @@ mf.comp.Message = class extends Frame {
                     size: "0.23rem",
                     style: [{ "position":"relative" },{locked:true}]
                 });
+		prm.width(prm.size());
+		prm.style({
+		    "text-align"   : "center",
+		    "margin-right" : "0.2rem",
+                    "margin-left"  : "auto"
+		});
             }
             return this.innerComp("closeComp", prm, Close);
         } catch (e) {
@@ -199,34 +231,16 @@ mf.comp.Message = class extends Frame {
     }
     
     /**
-     * message width
-     * set close position
-     *
-     * @param (string (size)) message width
-     * @type private
-     */
-    width (prm) {
-        try {
-            if (undefined !== prm) {
-                let wid = mf.func.getSize(prm);
-                this.closeComp().style({
-                    "left": ("%" === wid.type()) ? mf.func.sizeSum(wid, "-10%") : (wid.value() - 0.3) + wid.type()
-                });
-            }
-            return super.width(prm);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
      * @type private
      */
     visible (flg, cb) {
         try {
             let msg = this;
             if (true === flg) {
+	        if (false === this.adom().isPushed()) {
+		    this.style({"display" : null});
+		    return;
+		}
                 let msg_cb = () => {
                     try {
                         if ((true === flg) && (0 !== msg.timer())) {

@@ -35,10 +35,10 @@ msg.visible(true);
 
 |Simple<br>Param | Parameter Name | Type | Description |
 |:--------------:|:---------------|:-----|:------------|
-| | fixpos | string ["left"/"center"/"right"] | horizonal position |
-| | | string ["top"/"center"/"bottom"] | vertical position |
-| | x_fixpos | string ["left"/"center"/"right"] | horizonal fixed position |
-| | y_fixpos | string ["top"/"center"/"bottom"] | vertical fixed position |
+| | fixpos | string | horizonal position ["left"/"center"/"right"] |
+| | | string | vertical position ["top"/"center"/"bottom"] |
+| | x_fixpos | string | horizonal fixed position ["left"/"center"/"right"] |
+| | y_fixpos | string | vertical fixed position ["top"/"center"/"bottom"] |
 | | offset | string (size) | position offset, default is "0.5rem" |
 | | closeVisible | boolean | true: visible close component <default> |
 | | | | false: invisible close component  |
