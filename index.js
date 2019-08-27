@@ -203,14 +203,17 @@ mf.comp.Message = class extends Frame {
             if (true === mf.func.isComp(prm)) {
                 prm.option({
                     size: "0.23rem",
-                    style: [{ "position":"relative" },{locked:true}]
+                    style: [
+		        {
+		            "position" : "absolute",
+			    "right"    : "0.2rem"
+		        },
+			{locked:true}
+		    ],
+		    effect: new Vrtpos('center'),
+		    width: prm.size()
                 });
-		prm.width(prm.size());
-		prm.style({
-		    "text-align"   : "center",
-		    "margin-right" : "0.2rem",
-                    "margin-left"  : "auto"
-		});
+		prm.style({ "text-align" : "center" });
             }
             return this.innerComp("closeComp", prm, Close);
         } catch (e) {
@@ -234,6 +237,8 @@ mf.comp.Message = class extends Frame {
     }
     
     /**
+     * set visible timer when visible is true
+     * 
      * @type private
      */
     visible (flg, cb) {
