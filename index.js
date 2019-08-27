@@ -181,6 +181,7 @@ mf.comp.Message = class extends Frame {
      * 
      * @param (boolean) true: visible close component (default)
      *                  false: invisible close component 
+     * @return (boolean) close visible status
      * @type parameter
      */
     closeVisible (prm) {
