@@ -40,7 +40,7 @@ msg.visible(true);
 | | x_fixpos | string | horizonal fixed position ["left"/"center"/"right"] |
 | | y_fixpos | string | vertical fixed position ["top"/"center"/"bottom"] |
 | | offset | string (size) | position offset, default is "0.5rem" |
-| | closeVisible | boolean | true: visible close component <default> |
+| | closeVisible | boolean | true: visible close component (default) |
 | | | | false: invisible close component  |
 | | closeComp | component | replacement close component |
 | | timer | number | display message timer |

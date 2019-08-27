@@ -18,8 +18,9 @@ const Hrzpos = require("mofron-effect-hrzpos");
 mf.comp.Message = class extends Frame {
     /**
      * initialize message component
-     *
-     * @param (mixed) string/mofron-comp-text: message text contents
+     * 
+     * @param (mixed) string: message text
+     *                mofron-comp-text: message text component
      *                object: component option
      * @pmap text
      * @type private
@@ -178,7 +179,7 @@ mf.comp.Message = class extends Frame {
     /**
      * close component visible
      * 
-     * @param (boolean) true: visible close component <default>
+     * @param (boolean) true: visible close component (default)
      *                  false: invisible close component 
      * @type parameter
      */
