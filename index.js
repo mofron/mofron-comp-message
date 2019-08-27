@@ -195,6 +195,7 @@ mf.comp.Message = class extends Frame {
      * close component
      *
      * @param (component) replacement close component
+     * @return (component) close component
      * @type parameter
      */
     closeComp (prm) {
