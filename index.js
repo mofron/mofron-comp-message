@@ -73,24 +73,20 @@ mf.comp.Message = class extends Frame {
      * 
      * @type private
      */
-    beforeRender () {
+    setTxtpos (txt) {
         try {
-            super.beforeRender();
-	    let txt = this.text();
-	    if (0 !== txt.length) {
-                for (let idx in txt) {
-                    txt[idx].style(
-		        { "margin-left" : "0.3rem" },
-                        { loose: true }
-		    );
-		}
-	    }
+            super.setTxtpos(txt);
+            for (let idx in txt) {
+                txt[idx].style(
+                    { "margin-left" : "0.3rem" },
+                    { loose: true }
+                );
+            }
 	} catch (e) {
- 	    console.error(e.stack);
+            console.error(e.stack);
             throw e;
-	}
+        }
     }
-    
     /**
      * fixed position config
      * 
@@ -239,6 +235,8 @@ mf.comp.Message = class extends Frame {
     /**
      * set visible timer when visible is true
      * 
+     * @param (boolean) visible status
+     * @param (function) visible callback function
      * @type private
      */
     visible (flg, cb) {
