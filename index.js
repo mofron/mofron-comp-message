@@ -87,6 +87,33 @@ mf.comp.Message = class extends Frame {
             throw e;
         }
     }
+    
+    /**
+     * message text contents
+     * 
+     * @param (mixed) string: message text contents
+     *                mofron-comp-text: message text contents
+     * @return (mofron-comp-text) message text component
+     * @type parameter
+     */
+    text (prm) {
+        try {
+            if (undefined === prm) {
+                return (0 === super.text().length) ? null : super.text()[0];
+	    }
+	    if (0 === super.text().length) {
+                super.text(prm);
+	    } else if ("string" === typeof prm) {
+                super.text()[0].text(prm);
+	    } else if (true === mf.func.isInclude(prm, "Text")) {
+                this.updChild(super.text()[0], prm);
+	    }
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+
     /**
      * fixed position config
      * 

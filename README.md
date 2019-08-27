@@ -35,6 +35,8 @@ msg.visible(true);
 
 |Simple<br>Param | Parameter Name | Type | Description |
 |:--------------:|:---------------|:-----|:------------|
+| ◯  | text | mixed | string: message text contents |
+| | | | mofron-comp-text: message text contents |
 | | fixpos | string | horizonal position ["left"/"center"/"right"] |
 | | | string | vertical position ["top"/"center"/"bottom"] |
 | | x_fixpos | string | horizonal fixed position ["left"/"center"/"right"] |
