@@ -6,31 +6,44 @@
  *          display position is easy to configure by "fixpos" parameter.
  *          when the display position is set by "fixpos", the display position is fixed even if you scroll.
  * @attention default visible is false. it needs to be displayed by the javascript "visible" function
- * @author simpart
+ * @lisence MIT
  */
 const mf     = require("mofron");
-const Frame  = require("mofron-comp-txtframe");
+const TxtFrame = require("mofron-comp-txtframe");
 const Text   = require("mofron-comp-text");
 const Close  = require("mofron-comp-close");
 const Vrtpos = require("mofron-effect-vrtpos");
 const Hrzpos = require("mofron-effect-hrzpos");
+const ConfArg = mofron.class.ConfArg;
+const comutl = mofron.util.common;
 
-mf.comp.Message = class extends Frame {
+
+module.exports = class extends TxtFrame {
     /**
      * initialize message component
      * 
      * @param (mixed) string: message text
      *                mofron-comp-text: message text component
-     *                object: component option
-     * @pmap text
+     *                key-value: component config
+     * @short text
      * @type private
      */
-    constructor (po) {
+    constructor (prm) {
         try {
             super();
             this.name("Message");
-            this.prmMap("text");
-            this.prmOpt(po);
+            this.shortForm("text");
+            /* init config */
+	    this.confmng().add("timer", { type: "number", init: 0 });
+	    this.confmng().add("closePos", { type: "string", init: "right", select: ["left", "right"] });
+	    this.confmng().add("xFixpos", { type: "string", select: ["left","center","right"] });
+	    this.confmng().add("yFixpos", { type: "string", select: ["top","center","bottom"] });
+	    this.confmng().add("xoffset", { type: "size" });
+	    this.confmng().add("yoffset", { type: "size" });
+            /* set config */
+	    if (undefined !== prm) {
+                this.config(prm);
+	    }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -46,22 +59,53 @@ mf.comp.Message = class extends Frame {
         try {
             /* dom */
             super.initDomConts();
-            this.child([this.closeComp()]);
+	    this.text("");
+            this.child(this.closeComp());
             
             /* effect */
             this.effect([
-                new Hrzpos({ suspend:true }),
-                new Vrtpos({ suspend:true })
+                new Hrzpos({ suspend:true, tag: "Message" }),
+                new Vrtpos({ suspend:true, tag: "Message" })
             ]);
             
             /* style */
-            this.x_center(false);
+            this.center(false,true);
             this.style({
 	        "display"  : "flex",
 		"position" : "relative"
             });
             this.size("3.5rem", "0.5rem");
             this.visible(false);
+            
+            /* set timer function */
+	    let timer = (s1,s2,s3) => {
+                try {
+                    if (("none" !== s2[0].display) && (0 !== s3.timer())) {
+                        let disable = () => {
+                            try {
+                                s3.visible(false);
+                            } catch (e) {
+                                console.error(e.stack);
+                                throw e;
+                            }
+                        }
+                        setTimeout(disable, s3.timer());
+                    }
+                } catch (e) {
+                    console.error(e.stack);
+                    throw e;
+                }
+	    };
+	    this.childDom().style().listener("display",timer,this);
+
+
+	    let ycent = (y1,y2,y3) => {
+                if ("none" !== y2[0].display) {
+		    y3.yCenter(y3.yCenter());
+		    y3.text().style({ "top": null, "transform": null });
+		}
+	    }
+	    this.childDom().style().listener("display",ycent,this);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -73,15 +117,20 @@ mf.comp.Message = class extends Frame {
      * 
      * @type private
      */
-    setTxtpos (txt) {
+    beforeRender () {
         try {
-            super.setTxtpos(txt);
-            for (let idx in txt) {
-                txt[idx].style(
-                    { "margin-left" : "0.3rem" },
-                    { loose: true }
-                );
+            super.beforeRender();
+	    /* set text position */
+	    if ("left" === this.closePos()) {
+	        let mgn = comutl.sizesum(this.closeComp().width(), this.closeComp().width());
+                this.text().style({ "margin-left" : mgn }, { passive: true });
+	    } else {
+	        this.text().style({ "margin-left" : "0.1rem" }, { passive: true });
             }
+	    /* set position offset */
+	    let offset = this.offset();
+	    this.effect({ name: "HrzPos", tag: "Message" }).offset(offset[0]);
+	    this.effect({ name: "VrtPos", tag: "Message" }).offset(offset[1]);
 	} catch (e) {
             console.error(e.stack);
             throw e;
@@ -89,45 +138,20 @@ mf.comp.Message = class extends Frame {
     }
     
     /**
-     * message text contents
-     * 
-     * @param (mixed) string: message text contents
-     *                mofron-comp-text: message text contents
-     * @return (mofron-comp-text) message text component
-     * @type parameter
-     */
-    text (prm) {
-        try {
-            if (undefined === prm) {
-                return (0 === super.text().length) ? null : super.text()[0];
-	    }
-	    if (0 === super.text().length) {
-                super.text(prm);
-	    } else if ("string" === typeof prm) {
-                super.text()[0].text(prm);
-	    } else if (true === mf.func.isInclude(prm, "Text")) {
-                this.updChild(super.text()[0], prm);
-	    }
-	} catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-
-    /**
      * fixed position config
      * 
      * @param (string) horizonal position ["left"/"center"/"right"]
      * @param (string) vertical position ["top"/"center"/"bottom"]
+     * @return (array) positions [(horizonal), (vertical)]
      * @type parameter
      */
     fixpos (xpos, ypos) {
         try {
             if (undefined === xpos) {
-                return [this.member("x_fixpos"), this.member("y_fixpos")];
+                return [this.xFixpos(), this.yFixpos()];
             }
-            this.x_fixpos(xpos);
-            this.y_fixpos(ypos);
+            this.xFixpos(xpos);
+            this.yFixpos(ypos);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -135,20 +159,23 @@ mf.comp.Message = class extends Frame {
     }
     
     /**
-     * horizonal fixed position
+     * horizonal fixed position setter/getter
      * 
      * @param (string) horizonal fixed position ["left"/"center"/"right"]
-     * @return (string) horizonal fixed position
+     *                 undefined: call as getter
+     * @param (string(size)) offset size (not required)
+     * @return (mixed) string: horizonal fixed position
+     *                 null: not set
      * @type parameter
      */
-    x_fixpos (prm) {
+    xFixpos (prm, off) {
         try {
-            let ret = this.member("x_fixpos", ["left","center","right"], prm);
+	    let ret = this.confmng("xFixpos", prm);
             if (undefined !== prm) {
-                this.style({"position" : "fixed"});
-                this.effect(
-                    new Hrzpos(prm, ("center" !== prm) ? this.offset() : undefined)
-                );
+                this.style({ "position" : "fixed" });
+                let hrzpos = this.effect({ name: "HrzPos", tag: "Message" });
+		hrzpos.config({ suspend: false, type: prm });
+		this.confmng("xoffset",off);
             }
             return ret;
         } catch (e) {
@@ -161,17 +188,20 @@ mf.comp.Message = class extends Frame {
      * vertical fixed position
      * 
      * @param (string) vertical fixed position ["top"/"center"/"bottom"]
-     * @return (string) vertical fixed position
+     *                 undefined: call as getter
+     * @param (string(size)) offset size (not required)
+     * @return (mixed) string: vertical fixed position
+     *                 null: not set
      * @type parameter
      */
-    y_fixpos (prm) {
+    yFixpos (prm, off) {
         try {
-            let ret = this.member("y_fixpos", ["top","center","bottom"], prm); 
+            let ret = this.confmng("yFixpos", prm);
             if (undefined !== prm) {
-                this.style({"position" : "fixed"});
-                this.effect(
-                    new Vrtpos(prm, ("center" !== prm) ? this.offset() : undefined)
-                );
+                this.style({ "position" : "fixed" });
+                let vrtpos = this.effect({ name: "VrtPos", tag: "Message" });
+                vrtpos.config({ suspend: false, type: prm });
+		this.confmng("yoffset",off);
             }
             return ret;
         } catch (e) {
@@ -181,37 +211,30 @@ mf.comp.Message = class extends Frame {
     }
     
     /**
-     * position offset
+     * offset size of fixed position setter/getter
      * 
-     * @param (string (size)) position offset, default is "0.5rem"
-     * @return (string (size)) position offset
+     * @param (string(size)) horizonal offset size
+     *                       undefined: call as getter
+     * @param (string(size)) vertical offset size
+     * @return (array) offsets [(horizonal),(vertical)]
      * @type parameter
      */
-    offset (prm) {
+    offset (xoff, yoff) {
         try {
-            if (undefined !== prm) {
-                prm = mf.func.getSize(prm).toString();
-            }
-            return this.member("offset", "string", prm, "0.5rem");
-        } catch (e) {
+            if (undefined === xoff) {
+                /* getter */
+		return [
+		    (null === this.confmng("xoffset")) ? undefined : this.confmng("xoffset"),
+		    (null === this.confmng("yoffset")) ? undefined : this.confmng("yoffset")
+		];
+	    }
+	    /* setter */
+            this.confmng("xoffset", xoff);
+	    this.confmng("yoffset", yoff);
+	} catch (e) {
             console.error(e.stack);
             throw e;
-        }
-    }
-    
-    /**
-     * close component visible
-     * 
-     * @param (boolean) true: visible close component (default)
-     *                  false: invisible close component 
-     * @return (boolean) close visible status
-     * @type parameter
-     */
-    closeVisible (prm) {
-        try { return this.innerComp("close").visible(prm); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
+	}
     }
     
     /**
@@ -223,79 +246,59 @@ mf.comp.Message = class extends Frame {
      */
     closeComp (prm) {
         try {
-            if (true === mf.func.isComp(prm)) {
-                prm.option({
-                    size: "0.23rem",
-                    style: [
-		        {
-		            "position" : "absolute",
-			    "right"    : "0.2rem"
-		        },
-			{locked:true}
-		    ],
-		    effect: new Vrtpos('center'),
-		    width: prm.size()
+            if (true === comutl.isinc(prm,"Close")) {
+                prm.config({
+		    style: { "position" : "absolute" },
+		    effect: [
+		        new Hrzpos({ tag: "Message", type: this.closePos(), offset: "0.1rem" }),
+			new Vrtpos("center")
+                    ],
+                    closeTgt: this
                 });
-		prm.style({ "text-align" : "center" });
             }
             return this.innerComp("closeComp", prm, Close);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
-    } 
+    }
+    
+    /**
+     * position for close component setter/getter
+     * 
+     * @param (string) close position ('left', 'right')
+     *                 undefined: call as getter
+     * @return (string) close position ('left', 'right')
+     * @type parameter
+     */
+    closePos (prm) {
+        try {
+	    let ret = this.confmng("closePos", prm);
+	    if (undefined !== prm) {
+                this.closeComp().effect({ name: "HrzPos", tag: "Message" }).type(prm);
+	    }
+	    return ret;
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+	}
+    }
     
     /**
      * display timer
      * 
-     * @param (number) display message timer
+     * @param (number) display message timer [ms]
+     *                 undefined: call as getter
      * @return (number) display message timer
      * @type parameter
      */
     timer (prm) {
-        try { return this.member("timer", "number", prm, 0); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * set visible timer when visible is true
-     * 
-     * @param (boolean) visible status
-     * @param (function) visible callback function
-     * @type private
-     */
-    visible (flg, cb) {
         try {
-            let msg = this;
-            if (true === flg) {
-	        if (false === this.adom().isPushed()) {
-		    this.style({"display" : null});
-		    return;
-		}
-                let msg_cb = () => {
-                    try {
-                        if ((true === flg) && (0 !== msg.timer())) {
-                            setTimeout(() => { msg.visible(false); }, msg.timer()*1000);
-                        }
-                        if ("function" === typeof cb) {
-                            cb();
-                        }
-                    } catch (e) {
-                        console.error(e.stack);
-                        throw e;
-                    }
-                }
-                super.visible(flg, msg_cb);
-                return;
-            }
-            return super.visible(flg);
-        } catch (e) {
+	    return this.confmng("timer", prm);
+	} catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-module.exports = mf.comp.Message;
 /* end of file */

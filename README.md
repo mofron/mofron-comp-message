@@ -20,30 +20,34 @@ npm install mofron mofron-comp-message
 # Sample
 ```html
 <require>
-    <tag module="mofron-comp-message">Message</tag>
+    <tag load="mofron-comp-message">Message</tag>
 </require>
 
-<script>
+<script run=after>
 msg.visible(true);
 </script>
 
-<Message name=msg fixpos="right","bottom" timer=3>
-    message
-</Message>
+<Message name=msg fixpos=("right","bottom") offset=("0.4rem","0.7rem")>message</Message>
 ```
+
 # Parameter
 
-|Simple<br>Param | Parameter Name | Type | Description |
-|:--------------:|:---------------|:-----|:------------|
-| ◯  | text | mixed | string: message text contents |
-| | | | mofron-comp-text: message text contents |
+| Short<br>Form | Parameter Name | Type | Description |
+|:-------------:|:---------------|:-----|:------------|
 | | fixpos | string | horizonal position ["left"/"center"/"right"] |
 | | | string | vertical position ["top"/"center"/"bottom"] |
-| | x_fixpos | string | horizonal fixed position ["left"/"center"/"right"] |
-| | y_fixpos | string | vertical fixed position ["top"/"center"/"bottom"] |
-| | offset | string (size) | position offset, default is "0.5rem" |
-| | closeVisible | boolean | true: visible close component (default) |
-| | | | false: invisible close component  |
+| | xFixpos | string | horizonal fixed position ["left"/"center"/"right"] |
+| | | | undefined: call as getter |
+| | | string(size) | offset size (not required) |
+| | yFixpos | string | vertical fixed position ["top"/"center"/"bottom"] |
+| | | | undefined: call as getter |
+| | | string(size) | offset size (not required) |
+| | offset | string(size) | horizonal offset size |
+| | | | undefined: call as getter |
+| | | string(size) | vertical offset size |
 | | closeComp | component | replacement close component |
-| | timer | number | display message timer |
+| | closePos | string | close position ('left', 'right') |
+| | | | undefined: call as getter |
+| | timer | number | display message timer [ms] |
+| | | | undefined: call as getter |
 

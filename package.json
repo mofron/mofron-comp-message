@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-message",
-  "version": "0.2.14",
+  "version": "0.3.0",
   "description": "message component for mofron",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/mofron/mofron-comp-message.git"
   },
   "keywords": [
-    "front-end"
+    "front-end","mofron"
   ],
   "dependencies": {
     "mofron-comp-txtframe" : "",

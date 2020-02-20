@@ -1,11 +1,9 @@
 <require>
-    <tag module="mofron-comp-message">Message</tag>
+    <tag load="mofron-comp-message">Message</tag>
 </require>
 
-<script>
+<script run=after>
 msg.visible(true);
 </script>
 
-<Message name=msg fixpos="right","bottom" timer=3>
-    message
-</Message>
+<Message name=msg fixpos=("right","bottom") offset=("0.4rem","0.7rem")>message</Message>
