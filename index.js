@@ -101,7 +101,7 @@ module.exports = class extends TxtFrame {
 
 	    let ycent = (y1,y2,y3) => {
                 if ("none" !== y2[0].display) {
-		    y3.yCenter(y3.yCenter());
+		    y3.centerConf();
 		    y3.text().style({ "top": null, "transform": null });
 		}
 	    }
@@ -251,7 +251,6 @@ module.exports = class extends TxtFrame {
 		    style: { "position" : "absolute" },
 		    effect: [
 		        new Hrzpos({ tag: "Message", type: this.closePos(), offset: "0.1rem" }),
-			new Vrtpos("center")
                     ],
                     closeTgt: this
                 });
