@@ -45,7 +45,8 @@ msg.visible(true);
 | | offset | string(size) | horizonal offset size |
 | | | | undefined: call as getter |
 | | | string(size) | vertical offset size |
-| | closeComp | component | replacement close component |
+| | closeComp | mofron.class.Component | replacement close component |
+| | | | undefined: call as getter |
 | | closePos | string | close position ('left', 'right') |
 | | | | undefined: call as getter |
 | | timer | number | display message timer [ms] |

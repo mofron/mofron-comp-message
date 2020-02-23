@@ -16,7 +16,7 @@ const Vrtpos = require("mofron-effect-vrtpos");
 const Hrzpos = require("mofron-effect-hrzpos");
 const ConfArg = mofron.class.ConfArg;
 const comutl = mofron.util.common;
-
+const cmputl = mofron.util.component;
 
 module.exports = class extends TxtFrame {
     /**
@@ -59,7 +59,7 @@ module.exports = class extends TxtFrame {
         try {
             /* dom */
             super.initDomConts();
-	    this.text("");
+	    this.closeComp(new Close({ mainColor: [120,120,120] }));
             this.child(this.closeComp());
             
             /* effect */
@@ -71,8 +71,7 @@ module.exports = class extends TxtFrame {
             /* style */
             this.center(false,true);
             this.style({
-	        "display"  : "flex",
-		"position" : "relative"
+	        "display": "flex", "position": "relative"
             });
             this.size("3.5rem", "0.5rem");
             this.visible(false);
@@ -97,15 +96,6 @@ module.exports = class extends TxtFrame {
                 }
 	    };
 	    this.childDom().style().listener("display",timer,this);
-
-
-	    let ycent = (y1,y2,y3) => {
-                if ("none" !== y2[0].display) {
-		    y3.centerConf();
-		    y3.text().style({ "top": null, "transform": null });
-		}
-	    }
-	    this.childDom().style().listener("display",ycent,this);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -238,10 +228,11 @@ module.exports = class extends TxtFrame {
     }
     
     /**
-     * close component
+     * close component setter/getter
      *
-     * @param (component) replacement close component
-     * @return (component) close component
+     * @param (mofron.class.Component) replacement close component
+     *                                 undefined: call as getter
+     * @return (mofron.class.Component) close component
      * @type parameter
      */
     closeComp (prm) {
@@ -249,11 +240,12 @@ module.exports = class extends TxtFrame {
             if (true === comutl.isinc(prm,"Close")) {
                 prm.config({
 		    style: { "position" : "absolute" },
-		    effect: [
-		        new Hrzpos({ tag: "Message", type: this.closePos(), offset: "0.1rem" }),
-                    ],
+		    effect: new Hrzpos({ tag: "Message", type: this.closePos(), offset: "0.1rem" }),
                     closeTgt: this
                 });
+		if (true === comutl.isinc(prm.closeComp(),"Text")) {
+                    cmputl.rstyle(prm, { "top" : null, "transform" : null }, { bpref: true, lock: true });
+		}
             }
             return this.innerComp("closeComp", prm, Close);
         } catch (e) {
