@@ -31,7 +31,7 @@ module.exports = class extends TxtFrame {
     constructor (prm) {
         try {
             super();
-            this.name("Message");
+            this.modname("Message");
             this.shortForm("text");
             /* init config */
 	    this.confmng().add("timer", { type: "number", init: 0 });

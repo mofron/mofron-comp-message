@@ -19,9 +19,9 @@ npm install mofron mofron-comp-message
 
 # Sample
 ```html
-<require>
+<setting>
     <tag load="mofron-comp-message">Message</tag>
-</require>
+</setting>
 
 <script run=after>
 msg.visible(true);
