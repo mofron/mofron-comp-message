@@ -119,8 +119,8 @@ module.exports = class extends TxtFrame {
             }
 	    /* set position offset */
 	    let offset = this.offset();
-	    this.effect({ name: "HrzPos", tag: "Message" }).offset(offset[0]);
-	    this.effect({ name: "VrtPos", tag: "Message" }).offset(offset[1]);
+	    this.effect({ modname: "HrzPos", tag: "Message" }).offset(offset[0]);
+	    this.effect({ modname: "VrtPos", tag: "Message" }).offset(offset[1]);
 	} catch (e) {
             console.error(e.stack);
             throw e;
