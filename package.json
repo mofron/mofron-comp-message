@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-message",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "message component for mofron",
   "main": "index.js",
   "scripts": {

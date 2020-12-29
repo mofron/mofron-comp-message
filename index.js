@@ -62,18 +62,18 @@ module.exports = class extends TxtFrame {
 	    this.closeComp(new Close({ mainColor: [120,120,120] }));
             this.child(this.closeComp());
             
+	    let pvt = { private:true };
             /* effect */
             this.effect([
                 new Hrzpos({ suspend:true, tag: "Message" }),
                 new Vrtpos({ suspend:true, tag: "Message" })
-            ]);
+            ], pvt);
             
             /* style */
             this.center(false,true);
-            this.style({
-	        "display": "flex", "position": "relative"
-            });
-            this.size("3.5rem", "0.5rem");
+            this.style({ "display":"flex", "position":"relative" }, pvt);
+	    this.width("3.5rem", pvt);
+	    this.height("0.5rem", pvt);
             this.visible(false);
             
             /* set timer function */
@@ -95,7 +95,7 @@ module.exports = class extends TxtFrame {
                     throw e;
                 }
 	    };
-	    this.childDom().style().listener("display",timer,this);
+	    this.childDom().style().listener("display", timer, this);
         } catch (e) {
             console.error(e.stack);
             throw e;
