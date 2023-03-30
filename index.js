@@ -240,7 +240,7 @@ module.exports = class extends TxtFrame {
             if (true === comutl.isinc(prm,"Close")) {
                 prm.config({
 		    style: { "position" : "absolute" },
-		    effect: new Hrzpos({ tag: "Message", type: this.closePos(), offset: "0.1rem" }),
+		    effect: new Hrzpos({ tag: "Message", position: this.closePos(), offset: "0.1rem" }),
                     closeTgt: this
                 });
 		if (true === comutl.isinc(prm.closeComp(),"Text")) {
